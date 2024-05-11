@@ -10,5 +10,24 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./hiring.db"
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String?
+  messages Message[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())   
+  body       String
+  likesCount  Int     @default(0)
+  createdAt  DateTime   @default(now())
+
+
+  //One user can post many messages - One to Many
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
 }
